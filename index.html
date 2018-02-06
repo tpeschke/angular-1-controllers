@@ -1,12 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="pokemon">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
-<body>
+
+<body ng-controller="listCtrl">
+
+  {{ name }}
+
+  <button ng-hide="view==='filter'" ng-click="view='filter'"> Filter </button>
+  <button ng-hide="view==='add'" ng-click="view='add'"> Add </button>
+
+<div ng-show="view === 'filter'">
+  <input placeholder="filter" ng-model="basicFilter"/>
+  <input placeholder="name" ng-model="objectFilter.name"/>
+  <input placeholder="type" ng-model="objectFilter.type"/>
+</div>
+
+<div class='cardList' ng-show="view === 'add'">
+    <form ng-submit="addCard()">
+      <input placeholder="name" ng-model="newPokemon.name"/>
+      <input placeholder="type" ng-model="newPokemon.type"/>
+      <select ng-model="newPokemon.url" ng-options="image.url as image.name for image in images"></select>
+      <input placeholder="url" ng-model="newPokemon.url"/>
+      <input placeholder="hp" ng-model="newPokemon.stats.hp"/>
+      <input placeholder="atk" ng-model="newPokemon.stats.atk"/>
+      <input placeholder="def" ng-model="newPokemon.stats.def"/>
+      <button type='submit'>Add New Card</button>
+    </form>
+
+    <div class="card">
+        <div class="name">{{ newPokemon.name }}</div>
+        <div class="picture" ng-style="{backgroundImage: 'url('+ newPokemon.url+')'}"></div>
+        <div class="stats">
+          <div class="stat"> Type: {{ newPokemon.type }}</div>
+          <div class="stat"> HP: {{ newPokemon.stats.hp }}</div>
+          <div class="stat"> Atk: {{ newPokemon.stats.atk }}</div>
+          <div class="stat"> Def: {{ newPokemon.stats.def }}</div>
+        </div>
+      </div>
+</div>
   
+
+<div class="cardList">
+  <div class="card" 
+        ng-repeat="card in cards | filter: objectFilter"
+        ng-click="selectedCard = !selectedCard"
+        ng-class="{selected:selectedCard}">
+    <div class="name">{{ card.name }}</div>
+    <div class="picture" ng-style="{backgroundImage: 'url('+ card.url+')'}"></div>
+    <div class="stats">
+      <div class="stat"> Type: {{ card.type }}</div>
+      <div class="stat"> HP: {{ card.stats.hp }}</div>
+      <div class="stat"> Atk: {{ card.stats.atk }}</div>
+      <div class="stat"> Def: {{ card.stats.def }}</div>
+      <button ng-click="removeCard(card)">Release to Wild</button>
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js" charset="utf-8"></script>
+  <script src='app/app.js'></script>
 </body>
+
 </html>
